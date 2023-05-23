@@ -1,0 +1,20 @@
+{
+  "name": "avaliacao-01",
+  "version": "1.0.0",
+  "description": "Repositório para a Avaliação 01 da Disciplina de Desenvolvimento Back End - IFRN/PAR - 2023.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dev-back-end-Avaliacao/avaliacao-01.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dev-back-end-Avaliacao/avaliacao-01/issues"
+  },
+  "homepage": "https://github.com/Dev-back-end-Avaliacao/avaliacao-01#readme"
+}
