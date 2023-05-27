@@ -3,13 +3,12 @@ const routerProduct = express.Router();
 const con = require("../db/db");
 
 routerProduct.get("/", (req, res) => {
-  con.query("SELECT * FROM tbproduto"),
-    (erroComandoSQL, result, fields) => {
-      if (erroComandoSQL) {
-        throw erroComandoSQL;
-      }
-      res.status(200).send(result);
-    };
+  con.query("SELECT * FROM tbproduto", (erroComandoSQL, result, fields) => {
+    if (erroComandoSQL) {
+      throw erroComandoSQL;
+    }
+    res.status(200).send(result);
+  });
 });
 
 routerProduct.get("/:id", (req, res) => {
@@ -19,13 +18,9 @@ routerProduct.get("/:id", (req, res) => {
     [coProduto],
     (erroComandoSQL, result, fields) => {
       if (erroComandoSQL) {
-        throw erroComandoSQL;
-      }
-
-      if (result.length > 0) {
-        res.status(200).send(result);
-      } else {
-        res.status(404).send("Não encontrado");
+        console.error("Erro na consulta SQL:", erroComandoSQL);
+        res.status(500).send("Erro na consulta SQL");
+        return;
       }
     }
   );
@@ -56,39 +51,46 @@ routerProduct.post("/", (req, res) => {
   );
 });
 
-/* routerProduct.put("/:id", (req, res) => {
-  const coProduto = req.body.id;
-  const noProduto = req.body.noautor;
-  const qtProduto = req.body.qtproduto;
+routerProduct.put("/:id", (req, res) => {
+  const coProduto = req.params.id;
+  const noProduto = req.body.noProduto;
+  const qtProduto = req.body.qtProduto;
   const vlproduto = req.body.vlproduto;
   const vcproduto = req.body.vcproduto;
 
   const sql =
-    "UPDATE tbproduto SET NoAutor = ?, IdNacionalidade = ? WHERE IdAutor = ?";
-  con.query(sql, [noautor, idnacionalidade, idautor], (erroUpdate, result) => {
-    if (erroUpdate) {
-      throw erroUpdate;
+    "UPDATE tbproduto SET NoProduto = ?, QtProduto = ?, VlProduto = ?, VcProduto = ? WHERE CoProduto = ?";
+  con.query(
+    sql,
+    [noProduto, qtProduto, vlproduto, vcproduto, coProduto],
+    (err, result) => {
+      if (err) {
+        console.error("Erro ao atualizar o registro:", err);
+        res.status(500).send("Erro ao atualizar o registro");
+        return;
+      }
+      if (result.affectedRows > 0) {
+        res.status(200).send("Registro alterado com sucesso");
+      } else {
+        res.status(404).send("Registro não encontrado");
+      }
     }
-    if (result.affectedRows > 0) {
-      res.status(200).send("Registro alterado com sucesso");
-    } else {
-      res.status(404).send("Registro não encontrado");
-    }
-  });
-}); */
+  );
+});
 
 routerProduct.delete("/:id", (req, res) => {
   const coProduto = req.params.id;
   const sql = "DELETE FROM tbproduto WHERE IdAutor = ?";
-
   con.query(sql, [coProduto], (err, result, fields) => {
     if (err) {
-      throw err;
+      console.error("Erro ao excluir o registro:", err);
+      res.status(500).send("Erro ao excluir o registro");
+      return;
     }
     if (result.affectedRows > 0) {
-      res.status(200).send("Registro excluido com sucesso");
+      res.status(200).send("Registro excluído com sucesso");
     } else {
-      res.status(404).send("Não encontrado");
+      res.status(404).send("Registro não encontrado");
     }
   });
 });
