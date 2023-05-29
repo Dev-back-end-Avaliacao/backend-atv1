@@ -1,19 +1,21 @@
 const express = require("express");
-const mysql = require("mysql2");
-const jwt = require("jsonwebtoken");
 const app = express();
-const defaultRoute = require("./router/defaultRoute");
-const routerProduct = require("./router/product");
+const mysql = require("mysql2");
+const routerProdutos = require("./router/produtos");
+const routerUsuario = require("./router/usuario");
 const routerLogin = require("./router/login");
 const port = 3000;
 require("dotenv").config();
 
+
 app.use(express.json());
-app.use("/", defaultRoute);
-app.use("/product", routerProduct);
+
+app.use("/", routerLogin);
+app.use("/produtos", routerProdutos);
+app.use("/usuario", routerUsuario);
 app.use("/login", routerLogin);
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Sucess running services port ${port}`);
+  console.log(`Servidor ouvindo na porta ${port}`);
 });
